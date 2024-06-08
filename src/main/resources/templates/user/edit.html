@@ -8,25 +8,24 @@
 <body>
 <th:block th:replace="layout::header"></th:block>
 <div class="container mt-4">
-    <h1>Sửa thông tin user</h1>
+    <h1>Sửa quyền user</h1>
     <form th:action="@{/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+<!--        <div class="col-6 mb-3">-->
+<!--            <label class="form-label" for="username">Ten:</label>-->
+<!--            <input class="form-control" type="text" th:field="*{username}" id="username">-->
+<!--            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>-->
+<!--        </div>-->
+<!--        <div class="col-6 mb-3">-->
+<!--            <label class="form-label" for="email">Email:</label>-->
+<!--            <input class="form-control" type="text" th:field="*{email}" id="email">-->
+<!--            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
+<!--        </div>-->
         <div class="col-6 mb-3">
-            <label class="form-label" for="username">Ten:</label>
-            <input class="form-control" type="text" th:field="*{username}" id="username">
-            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label" for="email">Email:</label>
-            <input class="form-control" type="text" th:field="*{email}" id="email">
-            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label" for="admin">admin:</label>
-            <input type="checkbox" value="1" id="admin" class="form-check" name="admin">
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label" for="customer">customer:</label>
-            <input type="checkbox" value="2" id="customer" class="form-check" name="customer">
+            <label class="form-label">Roles:</label>
+            <div th:each="role : ${roles}">
+                <input type="checkbox" name="roleIds" th:value="${role.id}" th:checked="${user.roles.contains(role)}">
+                <span th:text="${role.name}"></span><br>
+            </div>
         </div>
 <!--        <div class="col-6 mb-3">-->
 <!--            <label class="form-label" for="price">Giá:</label>-->

@@ -1,6 +1,8 @@
 package com.bookstore.controller;
 
+import com.bookstore.entity.Role;
 import com.bookstore.entity.User;
+import com.bookstore.services.RoleServices;
 import com.bookstore.services.UserServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserServices userServices;
-
+    @Autowired
+    private RoleServices roleServices;
     @GetMapping("/login")
     public String login() {
         return "user/login";
@@ -52,16 +55,22 @@ public class UserController {
     public String edit(@PathVariable("id") Long id, Model model) {
         User user = userServices.GetUserById(id);
         if(user != null) {
+            List<Role> roles = roleServices.getAllRoles();
             model.addAttribute("user", user);
+            model.addAttribute("roles", roles);
             return "user/edit";
         }
         return "redirect:/users";
     }
     @PostMapping("/users/edit/{id}")
-    public String edit(@PathVariable("id") Long id, User user, BindingResult bindingResult,Model model,@RequestParam("role") Long roleId) {
-        if (bindingResult.hasErrors()) {
-            return "user/edit";
+    public String edit(@PathVariable("id") Long id, @RequestParam("roleIds") List<Long> roleIds) {
+        User existingUser = userServices.GetUserById(id);
+        if (existingUser != null) {
+            userServices.removeRolesFromUser(existingUser.getId());
+            for (Long roleId : roleIds) {
+                userServices.addRoleToUser(existingUser.getId(), roleId);
+            }
         }
-        return "user/edit";
+        return "redirect:/users";
     }
 }

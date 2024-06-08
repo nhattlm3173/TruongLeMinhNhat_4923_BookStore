@@ -17,4 +17,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     Long GetUserIdByUsername(String username);
     @Query(value = "SELECT r.name FROM role r INNER JOIN user_role ur ON r.id = ur.role_id WHERE ur.user_id =?1",nativeQuery = true)
     String[] getRoleOfUser(Long userId);
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM user_role WHERE user_id = ?1", nativeQuery = true)
+    void removeRolesFromUser(Long userId);
 }

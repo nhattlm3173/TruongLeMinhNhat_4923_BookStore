@@ -29,4 +29,11 @@ public class UserServices {
     public User GetUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }
+    public void removeRolesFromUser(Long userId) {
+        userRepository.removeRolesFromUser(userId);
+    }
+
+    public void addRoleToUser(Long userId, Long roleId) {
+        userRepository.addRoleToUser(userId, roleId);
+    }
 }
