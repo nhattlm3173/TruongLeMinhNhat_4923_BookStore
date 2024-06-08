@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách người dùng</title>
+    <th:block th:replace="layout::link-css"></th:block>
+</head>
+<body>
+<th:block th:replace="layout::header"></th:block>
+<div class="container mt-4">
+    <h1 th:text="${title}">Danh sách người dùng</h1>
+<!--    <a class="btn btn-primary mb-3" th:href="@{/books/add}" sec:authorize="hasAnyAuthority('admin')">Thêm mới</a>-->
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>username</th>
+            <th>email</th>
+            <th>name</th>
+            <th>Role</th>
+            <th sec:authorize="hasAnyAuthority('admin')">Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.name}"></td>
+            <td><p th:each="role :${user.roles}"><span th:text="${role.name}"></span></p></td>
+            <td sec:authorize="hasAnyAuthority('admin')">
+                <a th:href="@{/users/edit/{id}(id=${user.id})}">Sửa</a> |
+                <a th:href="@{/users/delete/{id}(id=${user.id})}" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<th:block th:replace="layout::footer"></th:block>
+</body>
+</html>

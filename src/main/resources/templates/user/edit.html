@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout::link-css"></th:block>
+    <title>Sửa thông tin user</title>
+</head>
+<body>
+<th:block th:replace="layout::header"></th:block>
+<div class="container mt-4">
+    <h1>Sửa thông tin user</h1>
+    <form th:action="@{/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+        <div class="col-6 mb-3">
+            <label class="form-label" for="username">Ten:</label>
+            <input class="form-control" type="text" th:field="*{username}" id="username">
+            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="email">Email:</label>
+            <input class="form-control" type="text" th:field="*{email}" id="email">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="admin">admin:</label>
+            <input type="checkbox" value="1" id="admin" class="form-check" name="admin">
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="customer">customer:</label>
+            <input type="checkbox" value="2" id="customer" class="form-check" name="customer">
+        </div>
+<!--        <div class="col-6 mb-3">-->
+<!--            <label class="form-label" for="price">Giá:</label>-->
+<!--            <input class="form-control" type="number" step="0.01" th:field="*{price}" id="price">-->
+<!--            <div class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>-->
+<!--        </div>-->
+<!--        <div class="col-6 mb-3">-->
+<!--            <label class="form-label" for="category">Thể loại:</label>-->
+<!--            <select class="form-control" id="category" th:field="*{category.id}">-->
+<!--                <option value="">&#45;&#45; Chọn thể loại &#45;&#45;</option>-->
+<!--                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
+        <input type="submit" class="btn btn-primary" value="Cập nhật">
+    </form>
+    <br>
+    <a th:href="@{/books}">Quay lại danh sách</a>
+</div>
+<th:block th:replace="layout::footer"></th:block>
+</body>
+</html>
