@@ -5,7 +5,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u from User u where u.username=?1")
     User findByUsername(String username);
@@ -21,4 +23,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query(value = "DELETE FROM user_role WHERE user_id = ?1", nativeQuery = true)
     void removeRolesFromUser(Long userId);
+
+    User findByEmail(String email);
+    User findByResetPassToken(String resetToken);
 }

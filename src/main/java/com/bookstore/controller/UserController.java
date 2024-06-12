@@ -6,15 +6,15 @@ import com.bookstore.services.RoleServices;
 import com.bookstore.services.UserServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSender;
+//import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -72,5 +72,41 @@ public class UserController {
             }
         }
         return "redirect:/users";
+    }
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "user/forgotPassword";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, Model model) {
+        boolean result = userServices.processForgotPassword(email);
+        if (result) {
+            model.addAttribute("message", "Đã gửi email đặt lại mật khẩu!");
+        } else {
+            model.addAttribute("error", "Email không tồn tại trong hệ thống!");
+        }
+        return "user/forgotPassword";
+    }
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        if (!userServices.isValidToken(token)) {
+            model.addAttribute("inValid", "Token không hợp lệ hoặc đã hết hạn.");
+            return "user/resetPassword";
+        }
+        model.addAttribute("token", token);
+        model.addAttribute("inValid", "");
+        return "user/resetPassword";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam("token") String token,
+                                       @RequestParam("password") String password, Model model) {
+        if (userServices.updatePassword(token, password)) {
+            model.addAttribute("message", "Mật khẩu đã được đặt lại thành công!");
+        } else {
+            model.addAttribute("error", "Token không hợp lệ hoặc đã hết hạn.");
+        }
+        return "user/resetPassword";
     }
 }

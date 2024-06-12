@@ -47,7 +47,7 @@ public class SercurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/register",
-                                "/error")
+                                "/error","/forgot-password","/reset-password")
                         .permitAll()
                         .requestMatchers("/books/edit/{id}", "/books/delete/{id}", "/books/add", "categories/add", "/categories/edit/{id}", "/categories/delete/{id}")
                         .hasAnyAuthority("admin")

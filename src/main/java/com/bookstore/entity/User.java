@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -23,13 +24,15 @@ public class User {
     @Column(name = "password",length = 250,nullable = false)
     @NotBlank(message = "Mật khẩu không được để trống")
     private String password;
-    @Column(name = "email",length = 50)
+    @Column(name = "email",length = 50, unique = true)
     @Size(max = 50,message = "Email phải ít hơn 50 ký tự")
     private String email;
     @Column(name = "name",length = 50,nullable = false)
     @Size(max = 50,message = "Tên của bạn phải ít hơn 50 ký tự")
     @NotBlank(message = "Tên của bạn không được để trống")
     private String name;
+    @Column(name = "Reset_Pass_Token")
+    private String resetPassToken;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Book> books;
     @ManyToMany(fetch = FetchType.LAZY)
