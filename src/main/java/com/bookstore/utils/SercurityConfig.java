@@ -47,13 +47,18 @@ public class SercurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/register",
-                                "/error","/forgot-password","/reset-password")
+                                "/error","/forgot-password","/reset-password","login/oauth2/**")
                         .permitAll()
                         .requestMatchers("/books/edit/{id}", "/books/delete/{id}", "/books/add", "categories/add", "/categories/edit/{id}", "/categories/delete/{id}")
                         .hasAnyAuthority("admin")
-                        .requestMatchers("/books")
+                        .requestMatchers("/books","/categories")
                         .hasAnyAuthority("admin", "user")
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/loginSuccess")
+                        .failureUrl("/loginFailure")
                 )
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/login")

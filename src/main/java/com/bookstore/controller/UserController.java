@@ -9,13 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 //import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -108,5 +114,40 @@ public class UserController {
             model.addAttribute("error", "Token không hợp lệ hoặc đã hết hạn.");
         }
         return "user/resetPassword";
+    }
+    @GetMapping("/loginSuccess")
+    public String getLoginInfo(Model model, @AuthenticationPrincipal OAuth2User principal, RedirectAttributes redirectAttributes) {
+        Map<String, Object> userAttributes = principal.getAttributes();
+//        model.addAttribute("name", userAttributes.get("name"));
+//        model.addAttribute("email", userAttributes.get("email"));
+        User existUser = userServices.FindUserByEmail(userAttributes.get("email").toString());
+        if(existUser != null) {
+//            System.out.println(existUser.getRoles());
+            return "redirect:/";
+        }else{
+            User user = new User();
+            user.setName(userAttributes.get("name").toString());
+            user.setUsername(userAttributes.get("email").toString());
+//            user.setPassword("OAuth2");
+            user.setEmail(userAttributes.get("email").toString());
+            user.setAuthProvider("GOOGLE");
+            model.addAttribute("user", user);
+            return "user/AddPassword";
+        }
+    }
+    @PostMapping("/addPassword")
+    public String processAddPassword(@RequestParam("password") String password,@RequestParam("name") String name, @RequestParam("username") String username,@RequestParam("email") String Email,@RequestParam("authProvider") String authProvider, Model model){
+        User user = new User();
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
+        user.setName(name);
+        user.setUsername(username);
+        user.setEmail(Email);
+        user.setAuthProvider(authProvider);
+        userServices.save(user);
+        return "redirect:/";
+    }
+    @GetMapping("/loginFailure")
+    public String loginFailure() {
+        return "user/loginFailure";
     }
 }

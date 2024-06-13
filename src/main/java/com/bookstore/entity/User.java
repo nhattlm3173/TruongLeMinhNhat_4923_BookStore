@@ -33,6 +33,8 @@ public class User {
     private String name;
     @Column(name = "Reset_Pass_Token")
     private String resetPassToken;
+    @Column(name ="auth_Provider")
+    private String authProvider;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Book> books;
     @ManyToMany(fetch = FetchType.LAZY)

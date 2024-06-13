@@ -82,4 +82,7 @@ public class UserServices {
         userRepository.save(user);
         return true;
     }
+    public User FindUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
